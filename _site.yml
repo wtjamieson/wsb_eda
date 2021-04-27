@@ -1,0 +1,7 @@
+name: "MyLabJournal"
+navbar:
+  title: "MyLabJournal"
+  left:
+    - text: "Home"
+      href: index.html
+output_dir: "docs"
