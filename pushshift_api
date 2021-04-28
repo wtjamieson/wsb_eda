@@ -1,0 +1,37 @@
+import pandas as pd
+import re
+import requests
+import math
+import time
+
+#ID for daily discussion (pulled from the url)
+#04/22/2021
+dd_id = 'mw1ekp'
+
+#Pull all comment IDs from daily discussion
+html = requests.get(f'https://api.pushshift.io/reddit/submission/comment_ids/{dd_id}')
+raw_comment_list = html.json()
+all_comment_list = np.array(raw_comment_list['data'])
+
+#Find the total number of chunks of comments of length 1000
+l = math.ceil(len(raw_comment_list['data'])/1000)
+
+#Query for comment data
+comments = []
+for i in range(0,l):
+    #Get the list of comment IDs in batches of 1000
+    comment_list = ",".join(all_comment_list[i*1000:(i+1)*1000])
+    #Query the Pushshift API for the comment data
+    html = requests.get(f'https://api.pushshift.io/reddit/comment/search?ids={comment_list}&fields=id,author,created_utc,body,score')
+    #The Pushshift API is rate limited, so if the server kicks back the request, the code waits 10 seconds and then tries again
+    if html.status_code != 200:
+        time.sleep(10)
+        html = requests.get(f'https://api.pushshift.io/reddit/comment/search?ids={comment_list}&fields=author&fields=id,author,created_utc,body,score')
+    #Get the comment data in json format
+    newcomments = html.json()
+    #Concatenate with previously collected data
+    comments = comments + newcomments['data']
+    time.sleep(1)
+
+#Save the data as a .csv file
+pd.DataFrame.from_dict(comments).to_csv('dd_4_22_21.csv', index = False)
