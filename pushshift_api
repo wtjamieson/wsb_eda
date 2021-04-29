@@ -26,7 +26,7 @@ for i in range(0,l):
     #The Pushshift API is rate limited, so if the server kicks back the request, the code waits 10 seconds and then tries again
     if html.status_code != 200:
         time.sleep(10)
-        html = requests.get(f'https://api.pushshift.io/reddit/comment/search?ids={comment_list}&fields=author&fields=id,author,created_utc,body,score')
+        html = requests.get(f'https://api.pushshift.io/reddit/comment/search?ids={comment_list}&fields=id,author,created_utc,body,score')
     #Get the comment data in json format
     newcomments = html.json()
     #Concatenate with previously collected data
