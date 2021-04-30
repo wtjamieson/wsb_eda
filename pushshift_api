@@ -20,7 +20,7 @@ import time
 post_id = 'n0ne5w'
 
 
-#Pull all commenter IDs from post
+#Pull all comment IDs from post
 html = requests.get(f'https://api.pushshift.io/reddit/submission/comment_ids/{post_id}')
 raw_comment_id_list = html.json()
 all_comment_id_list = np.array(raw_comment_id_list['data'])
