@@ -35,7 +35,7 @@ for i in range(0,l):
     comment_id_list = ",".join(all_comment_id_list[i*1000:(i+1)*1000])
     #Query the Pushshift API for the comment data
     html = requests.get(f'https://api.pushshift.io/reddit/comment/search?ids={comment_id_list}&fields=id,author,created_utc,body,score')
-    #The Pushshift API is rate limited, so if the server kicks back the request, the code waits 10 seconds and then tries again
+    #The Pushshift API is rate limited, so if the API kicks back the request, the code waits 10 seconds and then tries again
     if html.status_code != 200:
         time.sleep(10)
         html = requests.get(f'https://api.pushshift.io/reddit/comment/search?ids={comment_id_list}&fields=id,author,created_utc,body,score')
